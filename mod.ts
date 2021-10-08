@@ -25,13 +25,27 @@ export function run(
   args: Array<string>,
   tasks: Record<string, () => unknown>,
 ) {
-  return runAll(...args.map((arg) => tasks[arg]))();
+  try {
+    const input = args.map((arg) => {
+      const fn = tasks[arg];
+      if (!fn) {
+        throw new Error("No such task defined: " + arg);
+      }
+      return fn;
+    });
+    return runAll(...input)();
+  } catch (e) {
+    console.error("Error: ", e.message);
+  }
 }
 
 export function runAll(...input: Array<() => unknown>): () => unknown {
   return async () => {
     for (const task of input) {
       try {
+        if (!task) {
+          throw new Error("No such tas defined: ");
+        }
         await task();
       } catch (e) {
         console.error(e);
