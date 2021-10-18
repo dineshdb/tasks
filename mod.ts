@@ -4,13 +4,13 @@ export * as tasks from "./src/mod.ts";
 
 export const dotenv = config;
 
-export function sh(cmd: string) {
+export function sh(cmd: string, silent = false) {
   return async () => {
     console.log(yellow("[Run]"), cmd);
     const p = await Deno.run({
       cmd: cmd.split(" "),
       stdin: "inherit",
-      stdout: "inherit",
+      stdout: silent ? "inherit" : "null",
       stderr: "inherit",
     });
     const status = await p.status();
