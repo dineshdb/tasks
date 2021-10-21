@@ -13,7 +13,7 @@ run(Deno.args, {
   build: runAll(fmt, lint, test),
   clean: tasks.clean,
   release: runAll(
-    sh(`git tag -a 0.1.0 -m "Initial public release" release`),
+    sh(`git tag v0.2.0`),
     sh(`git push --tags`),
   ),
 });

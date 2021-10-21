@@ -28,12 +28,12 @@ if_not_command deno "curl -fsSL https://deno.land/x/install/install.sh | DENO_IN
 
 # tx task. Run taskfiles directlty as ``$ tx <rule>``.
 tx(){
-	if [[ -f Taskfile.js ]]
+	if [[ -f tasks.ts ]]
 	then
-	  deno run -A --unstable Taskfile.js $@
-	elif [[ -f Taskfile.ts ]]
+	  deno run -A --unstable tasks.ts $@
+	elif [[ -f tasks.ts ]]
 	then
-	  deno run -A --unstable Taskfile.js $@
+	  deno run -A --unstable tasks.ts $@
     else
       echo "No taskfile found"
     fi
