@@ -1,5 +1,5 @@
 import { config } from "https://deno.land/x/dotenv/mod.ts";
-import { red, yellow } from "https://deno.land/std/fmt/colors.ts";
+import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 export * as tasks from "./src/mod.ts";
 
 export const dotenv = config;
@@ -10,47 +10,72 @@ export function sh(cmd: string, silent = false) {
     const p = await Deno.run({
       cmd: cmd.split(" "),
       stdin: "inherit",
-      stdout: silent ? "inherit" : "null",
+      stdout: silent ? "null" : "inherit",
       stderr: "inherit",
     });
     const status = await p.status();
     if (!status.success) {
-      console.error(red(`[Error]`), status.code);
+      throw new Error("[sh] cmd returned: " + status.code);
     }
     return status;
   };
 }
 
-export function run(
-  args: Array<string>,
-  tasks: Record<string, () => unknown>,
-) {
-  try {
-    const input = args.map((arg) => {
-      const fn = tasks[arg];
-      if (!fn) {
-        throw new Error("No such task defined: " + arg);
-      }
-      return fn;
-    });
-    return runAll(...input)();
-  } catch (e) {
-    console.error("Error: ", e.message);
+function help(ctx: RunContext) {
+  console.info("Folloing tasks are available: ");
+  const keys = Object.keys(ctx.tasks).sort();
+  for (const task of keys) {
+    console.info(green(`  ${task}`));
   }
 }
 
-export function runAll(...input: Array<() => unknown>): () => unknown {
-  return async () => {
-    for (const task of input) {
-      try {
-        if (!task) {
-          throw new Error("No such tas defined: ");
-        }
-        await task();
-      } catch (e) {
-        console.error(e);
-        return;
-      }
-    }
+interface RunContext {
+  args: Array<string>;
+  tasks: Record<string, (_: RunContext) => unknown>;
+}
+
+export function task(...input: Array<string>) {
+  return (ctx: RunContext) => {
+    return _runAll(ctx, ...input.map((name) => ctx.tasks[name]));
   };
+}
+export async function run(
+  args: Array<string>,
+  tasks: Record<string, (_: RunContext) => unknown>,
+) {
+  const options: RunContext = {
+    tasks: {
+      ...tasks,
+      help: runAll(help, tasks["help"]),
+    },
+    args,
+  };
+  try {
+    for (const arg of args) {
+      const fn = options.tasks[arg];
+      if (!fn) {
+        throw new Error("No such task defined: " + arg);
+      }
+      console.log(yellow("[Task]"), green(arg));
+
+      await fn(options);
+    }
+  } catch (e) {
+    console.error(red(`[Error]`), e.message);
+  }
+}
+
+async function _runAll(
+  ctx: RunContext,
+  ...input: Array<(_: RunContext) => unknown>
+) {
+  for (const task of input) {
+    await task(ctx);
+  }
+}
+
+export function runAll(
+  ...input: Array<(_: RunContext) => unknown>
+): (_: RunContext) => unknown {
+  return (ctx: RunContext) => _runAll(ctx, ...input);
 }
