@@ -4,8 +4,8 @@ export function repo(name: string, url: string | URL) {
   return sh(`helm repo add ${name} ${url}`, true);
 }
 
-export function update() {
-  return sh(`helm repo update`);
+export function update(repo?: string) {
+  return sh(`helm repo update ${repo ?? ''}`);
 }
 
 export function k(cmd: string) {
