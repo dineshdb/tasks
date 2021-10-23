@@ -14,7 +14,8 @@ run(Deno.args, {
   ci: task("check", "test"),
   st: sh("git status"),
   release: runAll(
-    sh(`git tag v0.2.0`),
+    sh(`git tag v0.3.0`),
+    sh(`git push`),
     sh(`git push --tags`),
   ),
 });
