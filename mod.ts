@@ -8,7 +8,7 @@ export function sh(cmd: string, silent = false) {
   return async () => {
     console.log(yellow("[Run]"), cmd);
     const p = await Deno.run({
-      cmd: cmd.split(" "),
+      cmd: ["sh", "-c", cmd],
       stdin: "inherit",
       stdout: silent ? "null" : "inherit",
       stderr: "inherit",
