@@ -6,7 +6,9 @@ export const dotenv = config;
 
 export function sh(cmd: string, silent = false) {
   return async () => {
-    console.log(yellow("[Run]"), cmd);
+    if (!silent) {
+      console.log(yellow("[Run]"), cmd);
+    }
     const p = await Deno.run({
       cmd: ["sh", "-c", cmd],
       stdin: "inherit",
@@ -14,7 +16,7 @@ export function sh(cmd: string, silent = false) {
       stderr: "inherit",
     });
     const status = await p.status();
-    if (!status.success) {
+    if (!status.success && !silent) {
       throw new Error("[sh] cmd returned: " + status.code);
     }
     return status;
@@ -29,7 +31,7 @@ function help(ctx: RunContext) {
   }
 }
 
-interface RunContext {
+export interface RunContext {
   args: Array<string>;
   tasks: Record<string, (_: RunContext) => unknown>;
 }
