@@ -3,11 +3,8 @@ import { red } from "https://deno.land/std/fmt/colors.ts";
 export async function required(...cmds: Array<string>) {
   const notIntalled = (await Promise.all(cmds.map(check))).filter((i) => !!i);
   if (notIntalled.length !== 0) {
-    console.error(
-      red(`[Error]:`),
-      "Please install required command:",
-      notIntalled.join(", "),
-    );
+    const msg = "Please install required command: " + notIntalled.join(", ");
+    console.error(red(`[Error]:`), msg);
     Deno.exit(1);
   }
 }
