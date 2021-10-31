@@ -2,11 +2,11 @@
 
 import { checkDirty } from "./lib/git.ts";
 import { required } from "./lib/required.ts";
-import { run, runAll, sh, task, tasks } from "./mod.ts";
+import { main, runAll, sh, task, tasks } from "./mod.ts";
 
 await required("deno");
 
-run(Deno.args, {
+main({
   fmt: sh("deno fmt ."),
   check: runAll(
     sh("deno fmt --check ."),

@@ -41,10 +41,10 @@ export function task(...input: Array<string>) {
     return _runAll(ctx, ...input.map((name) => ctx.tasks[name]));
   };
 }
-export async function run(
-  args: Array<string>,
+export async function main(
   tasks: Record<string, (_: RunContext) => unknown>,
 ) {
+  const args = Deno.args;
   const options: RunContext = {
     tasks: {
       ...tasks,
