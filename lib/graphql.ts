@@ -1,20 +1,21 @@
 interface QueryOptions {
   url: string;
   query: string;
-  variables: Record<string, unknown>;
+  variables?: Record<string, unknown>;
+  headers?: Record<string, unknown>;
 }
 export async function graphqlQuery({
   url,
   query,
   variables,
-  ...options
+  headers,
 }: QueryOptions) {
   const json = await getJSON(url, {
     body: {
       query,
       variables,
     },
-    ...options,
+    headers,
   });
   return json;
 }
