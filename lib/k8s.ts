@@ -1,5 +1,5 @@
+import { colors } from "../deps.ts";
 import { runAll, sh } from "../mod.ts";
-import { green } from "https://deno.land/std/fmt/colors.ts";
 
 export function repo(name: string, url: string | URL) {
   return sh(`helm repo add ${name} ${url}`, true);
@@ -59,7 +59,8 @@ export function expose(
 ) {
   const { namespace } = options;
   return runAll(
-    () => console.log(green(`[INFO]: Exposing http://localhost:${port}`)),
+    () =>
+      console.log(colors.green(`[INFO]: Exposing http://localhost:${port}`)),
     sh(`kubectl --namespace ${namespace} port-forward ${service} ${port}`),
   );
 }

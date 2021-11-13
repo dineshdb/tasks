@@ -1,14 +1,11 @@
-import { config } from "https://deno.land/x/dotenv/mod.ts";
-import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 export * as tasks from "./src/mod.ts";
 export * as lib from "./lib/mod.ts";
-
-export const dotenv = config;
+import { colors } from "./deps.ts";
 
 export function sh(cmd: string, silent = false) {
   return async () => {
     if (!silent) {
-      console.log(yellow("[Run]"), cmd);
+      console.log(colors.yellow("[Run]"), cmd);
     }
     const p = await Deno.run({
       cmd: ["sh", "-c", cmd],
@@ -28,7 +25,7 @@ function help(ctx: RunContext) {
   console.info("Folloing tasks are available: ");
   const keys = Object.keys(ctx.tasks).sort();
   for (const task of keys) {
-    console.info(green(`  ${task}`));
+    console.info(colors.green(`  ${task}`));
   }
 }
 
@@ -59,12 +56,12 @@ export async function main(
       if (!fn) {
         throw new Error("No such task defined: " + arg);
       }
-      console.log(yellow("[Task]"), green(arg));
+      console.log(colors.yellow("[Task]"), colors.green(arg));
 
       await fn(options);
     }
   } catch (e) {
-    console.error(red(`[Error]`), e.message);
+    console.error(colors.red(`[Error]`), e.message);
   }
 }
 
