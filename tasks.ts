@@ -19,7 +19,7 @@ main({
   st: sh("git status"),
   release: runAll(
     checkDirty(),
-    sh(`git tag v0.4.0`),
+    sh(`git tag v0.4.1`),
     sh(`git push`),
     sh(`git push --tags`),
   ),

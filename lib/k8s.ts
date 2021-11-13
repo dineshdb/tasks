@@ -25,8 +25,8 @@ export function k(cmd: string) {
 }
 
 export const ka = (cmd: string) => k("apply " + cmd);
-export const kad = (...cmd: Array<string>) =>
-  k("delete -f " + cmd.join(" -f "));
+export const kdf = (...cmd: Array<string>) =>
+  k("delete --ignore-not-found=true -f " + cmd.join(" -f "));
 export const kaf = (...cmd: Array<string>) => k("apply -f " + cmd.join(" -f "));
 
 export function log(instance: string, { follow, namespace }: LogOptions) {

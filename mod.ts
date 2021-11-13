@@ -1,6 +1,7 @@
 import { config } from "https://deno.land/x/dotenv/mod.ts";
 import { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 export * as tasks from "./src/mod.ts";
+export * as lib from "./lib/mod.ts";
 
 export const dotenv = config;
 
