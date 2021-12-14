@@ -12,7 +12,7 @@ export async function required(...cmds: Array<string>) {
 async function check(cmd: string) {
   try {
     const p = await Deno.run({
-      cmd: [cmd],
+      cmd: ["command", "-v", cmd],
       stdin: "null",
       stdout: "null",
       stderr: "null",
