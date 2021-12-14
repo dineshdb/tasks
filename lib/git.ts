@@ -13,3 +13,6 @@ export function checkDirty(msg = "Working directory is dirty") {
     }
   };
 }
+
+export const headHash = sh(`git rev-parse --short HEAD`);
+export const latestTag = sh(`git tag --sort=taggerdate --list | tail -1 `);

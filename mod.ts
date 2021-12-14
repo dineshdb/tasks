@@ -1,6 +1,7 @@
 export * as tasks from "./src/mod.ts";
 export * as lib from "./lib/mod.ts";
 import { colors } from "./deps.ts";
+import { Plugin } from "./src/plugin.ts";
 
 export function sh(cmd: string, silent = false) {
   return async () => {
@@ -50,6 +51,9 @@ export async function main(
     },
     args,
   };
+  for (const plugin of plugins) {
+    await plugin.init();
+  }
   try {
     for (const arg of args) {
       const fn = options.tasks[arg];
@@ -78,4 +82,10 @@ export function runAll(
   ...input: Array<(_: RunContext) => unknown>
 ): (_: RunContext) => unknown {
   return (ctx: RunContext) => _runAll(ctx, ...input);
+}
+
+const plugins: Array<Plugin<unknown>> = [];
+
+export function withPlugin(...plugin: Array<Plugin<unknown>>) {
+  plugins.push(...plugin);
 }

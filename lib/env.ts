@@ -1,4 +1,4 @@
-import { exists, substitute } from "../deps.ts";
+import { substitute } from "../deps.ts";
 
 export async function envsubst(file: string) {
   const text = await Deno.readTextFile(file);
